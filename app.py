@@ -10,27 +10,31 @@ import plotly.graph_objects as go
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import (
-    SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+    SimpleDocTemplate,
+    Paragraph,
+    Spacer,
+    Table,
+    TableStyle,
 )
 
 from analyzer import extract_resume_text, analyze_resume
 
 
-# =====================================================
+# ============================================================
 # PAGE CONFIGURATION
-# =====================================================
+# ============================================================
 
 st.set_page_config(
-    page_title="ResumeIQ Pro | Resume Intelligence",
+    page_title="ResumeIQ Pro | Career Intelligence",
     page_icon="📄",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="expanded",
 )
 
 
-# =====================================================
-# PROFESSIONAL LIGHT THEME
-# =====================================================
+# ============================================================
+# PROFESSIONAL LIGHT UI
+# ============================================================
 
 st.markdown("""
 <style>
@@ -39,6 +43,7 @@ st.markdown("""
 :root {
     color-scheme: light;
     --primary: #7062DF;
+    --primary-hover: #5C4BC9;
     --primary-light: #F0EEFF;
     --background: #F7F8FC;
     --surface: #FFFFFF;
@@ -65,7 +70,27 @@ html, body, .stApp {
     padding-bottom: 3rem;
 }
 
-/* TEXT */
+/* ============================================================
+   FIX 1: WHITE TOP HEADER
+   ============================================================ */
+
+[data-testid="stHeader"] {
+    background: #FFFFFF !important;
+    border-bottom: 1px solid #E5E8F1 !important;
+}
+
+[data-testid="stHeader"] button,
+[data-testid="stHeader"] svg {
+    color: #7062DF !important;
+}
+
+[data-testid="stToolbar"] {
+    background: transparent !important;
+}
+
+/* ============================================================
+   FIX 2: MAIN TEXT BLACK
+   ============================================================ */
 
 [data-testid="stMain"] h1,
 [data-testid="stMain"] h2,
@@ -99,7 +124,148 @@ html, body, .stApp {
     font-weight: 600;
 }
 
-/* SIDEBAR */
+/* ============================================================
+   FIX 3: DROPDOWNS - NO BLACK BACKGROUND
+   ============================================================ */
+
+[data-testid="stMain"] [data-baseweb="select"] > div {
+    background: #FFFFFF !important;
+    color: #111111 !important;
+    border: 1px solid #DDE0EC !important;
+    border-radius: 10px !important;
+}
+
+[data-testid="stMain"] [data-baseweb="select"] input {
+    background: #FFFFFF !important;
+    color: #111111 !important;
+}
+
+[data-testid="stMain"] [data-baseweb="select"] svg {
+    color: #7062DF !important;
+    fill: #7062DF !important;
+}
+
+[data-testid="stMain"]
+[data-baseweb="select"] [role="button"] {
+    background: #F0EEFF !important;
+    color: #7062DF !important;
+}
+
+[data-baseweb="popover"],
+[data-baseweb="menu"] {
+    background: #FFFFFF !important;
+    color: #111111 !important;
+}
+
+[data-baseweb="menu"] li {
+    color: #111111 !important;
+}
+
+[data-baseweb="menu"] li:hover {
+    background: #F0EEFF !important;
+}
+
+/* ============================================================
+   FIX 4: FILE UPLOAD BUTTON - PURPLE
+   ============================================================ */
+
+[data-testid="stFileUploader"] {
+    background: #FFFFFF !important;
+    border: 1px solid #E5E8F1 !important;
+    border-radius: 15px !important;
+    padding: 12px;
+}
+
+[data-testid="stFileUploaderDropzone"] {
+    background: #F8F7FF !important;
+    border: 1px dashed #C6BFFF !important;
+    border-radius: 12px !important;
+}
+
+[data-testid="stFileUploader"] button,
+[data-testid="stFileUploaderDropzone"] button {
+    background: #7062DF !important;
+    color: #FFFFFF !important;
+    border: none !important;
+    border-radius: 9px !important;
+    font-weight: 700 !important;
+}
+
+[data-testid="stFileUploader"] button:hover {
+    background: #5C4BC9 !important;
+}
+
+[data-testid="stFileUploader"] button p,
+[data-testid="stFileUploader"] button span,
+[data-testid="stFileUploader"] button svg {
+    color: #FFFFFF !important;
+}
+
+/* ============================================================
+   FIX 5: BUTTONS - NO BLACK
+   ============================================================ */
+
+.stButton > button[kind="primary"] {
+    background: #7062DF !important;
+    color: #FFFFFF !important;
+    border: none !important;
+    border-radius: 11px !important;
+    min-height: 46px;
+    font-weight: 700;
+}
+
+.stButton > button[kind="primary"]:hover {
+    background: #5C4BC9 !important;
+}
+
+.stButton > button[kind="secondary"],
+.stDownloadButton > button {
+    background: #FFFFFF !important;
+    color: #4936C3 !important;
+    border: 1px solid #CFC8F9 !important;
+    border-radius: 11px !important;
+    min-height: 43px;
+    font-weight: 600;
+}
+
+.stButton > button[kind="secondary"]:hover,
+.stDownloadButton > button:hover {
+    background: #F0EEFF !important;
+}
+
+.stButton button p,
+.stDownloadButton button p {
+    color: inherit !important;
+}
+
+[data-testid="stMain"]
+.stButton > button[kind="primary"] p {
+    color: #FFFFFF !important;
+}
+
+/* ============================================================
+   FIX 6: INPUTS AND RADIO BUTTONS
+   ============================================================ */
+
+[data-testid="stMain"] input,
+[data-testid="stMain"] textarea {
+    background: #FFFFFF !important;
+    color: #111111 !important;
+}
+
+[data-testid="stMain"] input[type="radio"] {
+    accent-color: #7062DF !important;
+}
+
+[data-testid="stTextArea"] textarea {
+    border: 1px solid #DDE0EC !important;
+    border-radius: 11px !important;
+    line-height: 1.7;
+}
+
+/* ============================================================
+   WHITE SIDEBAR
+   ============================================================ */
 
 [data-testid="stSidebar"] {
     background: #FFFFFF !important;
@@ -192,42 +358,9 @@ label:has(input:checked) p {
     margin-top: 7px;
 }
 
-/* BUTTONS */
-
-.stButton > button[kind="primary"] {
-    background: #7062DF !important;
-    color: #FFFFFF !important;
-    border: none !important;
-    border-radius: 11px !important;
-    min-height: 46px;
-    font-weight: 700;
-}
-
-.stButton > button[kind="primary"]:hover {
-    background: #5B4BC9 !important;
-}
-
-.stButton > button[kind="secondary"],
-.stDownloadButton > button {
-    background: #FFFFFF !important;
-    color: #25213C !important;
-    border: 1px solid #DDE0EC !important;
-    border-radius: 11px !important;
-    min-height: 43px;
-    font-weight: 600;
-}
-
-.stButton button p,
-.stDownloadButton button p {
-    color: inherit !important;
-}
-
-[data-testid="stMain"]
-.stButton > button[kind="primary"] p {
-    color: #FFFFFF !important;
-}
-
-/* DASHBOARD HERO */
+/* ============================================================
+   DASHBOARD HERO
+   ============================================================ */
 
 .hero {
     background: linear-gradient(
@@ -264,7 +397,9 @@ label:has(input:checked) p {
     max-width: 620px;
 }
 
-/* CARDS */
+/* ============================================================
+   FEATURE CARDS
+   ============================================================ */
 
 .feature-card {
     background: #FFFFFF;
@@ -299,7 +434,9 @@ label:has(input:checked) p {
     line-height: 1.75;
 }
 
-/* METRIC CARDS */
+/* ============================================================
+   METRIC CARDS
+   ============================================================ */
 
 [data-testid="stMetric"] {
     background: #FFFFFF;
@@ -317,34 +454,9 @@ label:has(input:checked) p {
     font-weight: 800;
 }
 
-/* INPUTS */
-
-[data-testid="stMain"] input,
-[data-testid="stMain"] textarea {
-    background: #FFFFFF !important;
-    color: #111111 !important;
-}
-
-[data-testid="stMain"]
-[data-baseweb="select"] > div {
-    background: #FFFFFF !important;
-    color: #111111 !important;
-}
-
-[data-testid="stFileUploader"] {
-    background: #FFFFFF;
-    border: 1px solid #E5E8F1;
-    border-radius: 15px;
-    padding: 12px;
-}
-
-[data-testid="stFileUploaderDropzone"] {
-    background: #F8F7FF;
-    border: 1px dashed #C6BFFF;
-    border-radius: 12px;
-}
-
-/* SKILL LABELS */
+/* ============================================================
+   SKILL TAGS
+   ============================================================ */
 
 .skill {
     display: inline-block;
@@ -362,7 +474,9 @@ label:has(input:checked) p {
     color: #8B521F;
 }
 
-/* SECTION INTRO */
+/* ============================================================
+   PAGE DESCRIPTION AND FOOTER
+   ============================================================ */
 
 .page-intro {
     color: #50566B;
@@ -370,8 +484,6 @@ label:has(input:checked) p {
     line-height: 1.8;
     margin: 7px 0 25px;
 }
-
-/* FOOTER */
 
 .footer {
     margin-top: 35px;
@@ -381,8 +493,6 @@ label:has(input:checked) p {
     color: #50566B;
     font-size: 12px;
 }
-
-/* MOBILE */
 
 @media (max-width: 700px) {
     .hero {
@@ -402,9 +512,9 @@ label:has(input:checked) p {
 """, unsafe_allow_html=True)
 
 
-# =====================================================
-# JOB DESCRIPTION TEMPLATES
-# =====================================================
+# ============================================================
+# JOB TEMPLATES
+# ============================================================
 
 JOB_TEMPLATES = {
     "Data Analyst": (
@@ -414,15 +524,15 @@ JOB_TEMPLATES = {
     ),
     "Software Developer": (
         "Junior Software Developer. Required skills: Python, "
-        "JavaScript, HTML, CSS, SQL, Git, GitHub and API."
+        "JavaScript, HTML, CSS, SQL, Git, GitHub and APIs."
     ),
     "UI/UX Designer": (
         "Junior UI/UX Designer. Required skills: UI/UX, "
-        "Figma, communication, HTML and CSS."
+        "Figma, wireframing, prototyping and communication."
     ),
     "QA Engineer": (
         "Junior QA Engineer. Required skills: software testing, "
-        "manual testing, automation testing, SQL, "
+        "manual testing, regression testing, SQL, "
         "communication and problem solving."
     ),
     "AI Engineer": (
@@ -434,7 +544,7 @@ JOB_TEMPLATES = {
         "Junior Business Analyst. Required skills: "
         "business analysis, Excel, SQL, Power BI, "
         "communication and project management."
-    )
+    ),
 }
 
 
@@ -443,19 +553,19 @@ Jordan Lee
 Email: jordan@example.com
 
 Professional Summary
-Computing graduate interested in data analytics
-and software quality assurance.
+Computing graduate interested in data analytics.
 
 Education
 Higher National Diploma in Computing.
 
 Work Experience
 Quality Assurance Intern.
-Performed manual testing and software testing.
+Performed manual testing, regression testing
+and user acceptance testing.
 
 Skills
-Python, SQL, Excel, Power BI, Pandas,
-Git, GitHub, HTML, CSS, communication
+Python, SQL, Excel, Power BI, Pandas, NumPy,
+HTML, CSS, Git, GitHub, communication
 and problem solving.
 
 Projects
@@ -470,13 +580,13 @@ SECTIONS = {
     "Work experience": r"experience|employment|internship",
     "Education": r"education|qualification|university",
     "Skills": r"skills|technologies",
-    "Projects": r"projects|portfolio"
+    "Projects": r"projects|portfolio",
 }
 
 
-# =====================================================
+# ============================================================
 # SESSION STATE
-# =====================================================
+# ============================================================
 
 PAGES = [
     "Dashboard",
@@ -484,26 +594,21 @@ PAGES = [
     "Skill Intelligence",
     "Resume Health",
     "Recommendations",
-    "Reports & History"
+    "Reports & History",
 ]
 
-if "page" not in st.session_state:
-    st.session_state.page = "Dashboard"
+DEFAULTS = {
+    "page": "Dashboard",
+    "history": [],
+    "current_id": None,
+    "resume_source": "Upload resume",
+    "template": "Data Analyst",
+    "job_description": "",
+}
 
-if "history" not in st.session_state:
-    st.session_state.history = []
-
-if "current_id" not in st.session_state:
-    st.session_state.current_id = None
-
-if "resume_source" not in st.session_state:
-    st.session_state.resume_source = "Upload resume"
-
-if "template" not in st.session_state:
-    st.session_state.template = "Data Analyst"
-
-if "job_description" not in st.session_state:
-    st.session_state.job_description = ""
+for key, value in DEFAULTS.items():
+    if key not in st.session_state:
+        st.session_state[key] = value
 
 
 def navigate(page):
@@ -530,7 +635,7 @@ def current_record():
             for record in st.session_state.history
             if record["id"] == st.session_state.current_id
         ),
-        None
+        None,
     )
 
 
@@ -544,13 +649,13 @@ def clear_history():
     st.session_state.current_id = None
 
 
-# =====================================================
-# ANALYSIS FUNCTIONS
-# =====================================================
+# ============================================================
+# ANALYSIS HELPERS
+# ============================================================
 
 def normalize_score(value):
     try:
-        return max(0, min(100, float(value)))
+        return max(0.0, min(100.0, float(value)))
     except (TypeError, ValueError):
         return 0.0
 
@@ -562,7 +667,7 @@ def prepare_result(raw, resume_text):
         "resume_skills",
         "job_skills",
         "matched_skills",
-        "missing_skills"
+        "missing_skills",
     ]:
         result[key] = sorted(
             set(result.get(key) or [])
@@ -593,16 +698,16 @@ def prepare_result(raw, resume_text):
     result["health"] = round(
         sum(detected_sections.values())
         / len(detected_sections) * 100,
-        1
+        1,
     )
 
     recommendations = []
 
     if result["missing_skills"]:
         recommendations.append(
-            "Review the following job skills: "
+            "Review these job skills: "
             + ", ".join(result["missing_skills"][:6])
-            + ". Add them to your resume only if you "
+            + ". Only add them to your resume if you "
             "genuinely have those skills."
         )
 
@@ -615,14 +720,14 @@ def prepare_result(raw, resume_text):
 
     if len(resume_text.split()) < 180:
         recommendations.append(
-            "Consider including more relevant projects, "
+            "Consider adding relevant projects, "
             "experience and measurable achievements."
         )
 
     if not recommendations:
         recommendations.append(
-            "Your basic checks look good. "
-            "Review formatting, spelling and achievements."
+            "Review formatting, spelling and achievements "
+            "before submitting your resume."
         )
 
     result["recommendations"] = recommendations
@@ -631,21 +736,21 @@ def prepare_result(raw, resume_text):
 
 
 def show_metrics(result):
-    col1, col2, col3 = st.columns(3)
+    a, b, c = st.columns(3)
 
-    col1.metric(
+    a.metric(
         "Skill Coverage",
-        f"{result['skill_coverage']:.1f}%"
+        f"{result['skill_coverage']:.1f}%",
     )
 
-    col2.metric(
+    b.metric(
         "Text Similarity",
-        f"{result['similarity']:.1f}%"
+        f"{result['similarity']:.1f}%",
     )
 
-    col3.metric(
+    c.metric(
         "Resume Health",
-        f"{result['health']:.1f}%"
+        f"{result['health']:.1f}%",
     )
 
 
@@ -659,7 +764,7 @@ def show_skills(skills, missing=False):
     markup = "".join(
         f'<span class="{css_class}">'
         f'{html.escape(str(skill).title())}'
-        '</span>'
+        "</span>"
         for skill in skills
     )
 
@@ -679,7 +784,7 @@ def show_skill_chart(result):
             labels=["Matched Skills", "Potential Gaps"],
             values=[matched, missing],
             hole=0.68,
-            marker_colors=["#7062DF", "#54B8AA"]
+            marker_colors=["#7062DF", "#54B8AA"],
         )
     )
 
@@ -688,9 +793,9 @@ def show_skill_chart(result):
         paper_bgcolor="rgba(0,0,0,0)",
         font=dict(
             family="Inter",
-            color="#111111"
+            color="#111111",
         ),
-        margin=dict(l=10, r=10, t=15, b=10)
+        margin=dict(l=10, r=10, t=15, b=10),
     )
 
     st.plotly_chart(fig, use_container_width=True)
@@ -708,7 +813,7 @@ def show_health_chart(sections):
             marker_color=[
                 "#54B8AA" if value else "#E8A65A"
                 for value in values
-            ]
+            ],
         )
     )
 
@@ -717,23 +822,23 @@ def show_health_chart(sections):
         xaxis=dict(range=[0, 1.1], visible=False),
         yaxis=dict(
             autorange="reversed",
-            automargin=True
+            automargin=True,
         ),
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
         font=dict(
             family="Inter",
-            color="#111111"
+            color="#111111",
         ),
-        margin=dict(l=10, r=20, t=10, b=20)
+        margin=dict(l=10, r=20, t=10, b=20),
     )
 
     st.plotly_chart(fig, use_container_width=True)
 
 
-# =====================================================
-# PDF REPORT GENERATOR
-# =====================================================
+# ============================================================
+# PDF REPORT
+# ============================================================
 
 def create_pdf(record):
     result = record["result"]
@@ -743,7 +848,7 @@ def create_pdf(record):
     doc = SimpleDocTemplate(
         output,
         leftMargin=45,
-        rightMargin=45
+        rightMargin=45,
     )
 
     styles = getSampleStyleSheet()
@@ -751,7 +856,7 @@ def create_pdf(record):
     def paragraph(text, style="BodyText"):
         return Paragraph(
             html.escape(str(text)),
-            styles[style]
+            styles[style],
         )
 
     story = [
@@ -760,27 +865,27 @@ def create_pdf(record):
         paragraph("Resume: " + record["filename"]),
         paragraph("Target Role: " + record["role"]),
         paragraph("Date: " + record["date"]),
-        Spacer(1, 15)
+        Spacer(1, 15),
     ]
 
     table = Table([
         ["Metric", "Result"],
         ["Skill Coverage", f"{result['skill_coverage']:.1f}%"],
         ["Text Similarity", f"{result['similarity']:.1f}%"],
-        ["Resume Health", f"{result['health']:.1f}%"]
+        ["Resume Health", f"{result['health']:.1f}%"],
     ])
 
     table.setStyle(TableStyle([
         (
             "BACKGROUND", (0, 0), (-1, 0),
-            colors.HexColor("#EEEBFF")
+            colors.HexColor("#EEEBFF"),
         ),
         (
             "GRID", (0, 0), (-1, -1),
-            0.5, colors.HexColor("#E5E8F1")
+            0.5, colors.HexColor("#E5E8F1"),
         ),
         ("TOPPADDING", (0, 0), (-1, -1), 9),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 9)
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 9),
     ]))
 
     story.append(table)
@@ -788,7 +893,7 @@ def create_pdf(record):
     groups = [
         ("Matched Skills", result["matched_skills"]),
         ("Potential Skill Gaps", result["missing_skills"]),
-        ("Recommendations", result["recommendations"])
+        ("Recommendations", result["recommendations"]),
     ]
 
     for heading, items in groups:
@@ -810,9 +915,9 @@ def create_pdf(record):
     return output.getvalue()
 
 
-# =====================================================
-# SIDEBAR NAVIGATION
-# =====================================================
+# ============================================================
+# SIDEBAR
+# ============================================================
 
 with st.sidebar:
 
@@ -822,31 +927,31 @@ with st.sidebar:
         '<div class="brand-subtitle">'
         'CAREER INTELLIGENCE PLATFORM'
         '</div></div>',
-        unsafe_allow_html=True
+        unsafe_allow_html=True,
     )
 
     st.markdown(
         '<div class="sidebar-label">WORKSPACE</div>',
-        unsafe_allow_html=True
+        unsafe_allow_html=True,
     )
 
     st.radio(
         "Navigation",
         PAGES,
         key="page",
-        label_visibility="collapsed"
+        label_visibility="collapsed",
     )
 
     st.markdown(
         '<div class="sidebar-label">QUICK ACCESS</div>',
-        unsafe_allow_html=True
+        unsafe_allow_html=True,
     )
 
     st.button(
         "✨ Try Demo Analysis",
         on_click=demo_mode,
         use_container_width=True,
-        type="primary"
+        type="primary",
     )
 
     st.markdown(
@@ -858,15 +963,15 @@ with st.sidebar:
         'Analyze your resume, understand your skills '
         'and prepare for your next opportunity.'
         '</div></div>',
-        unsafe_allow_html=True
+        unsafe_allow_html=True,
     )
 
     st.caption("ResumeIQ Pro 2.0")
 
 
-# =====================================================
+# ============================================================
 # DASHBOARD
-# =====================================================
+# ============================================================
 
 if st.session_state.page == "Dashboard":
 
@@ -883,7 +988,7 @@ if st.session_state.page == "Dashboard":
         'and discover practical ways to prepare '
         'for your next career opportunity.'
         '</div></div>',
-        unsafe_allow_html=True
+        unsafe_allow_html=True,
     )
 
     st.subheader("Your Career Workspace")
@@ -896,23 +1001,23 @@ if st.session_state.page == "Dashboard":
         (
             "📄", "#F0EEFF",
             "Resume Analyzer",
-            "Compare your resume with a job description."
+            "Compare your resume with a job description.",
         ),
         (
             "📊", "#EAF5FC",
             "Skill Intelligence",
-            "Explore matched skills and potential gaps."
+            "Explore matched skills and potential gaps.",
         ),
         (
             "💚", "#EAF8F4",
             "Resume Health",
-            "Check your resume's structure and sections."
+            "Check your resume structure and sections.",
         ),
         (
             "💡", "#FFF5E9",
             "Recommendations",
-            "Discover practical ways to improve your CV."
-        )
+            "Discover practical ways to improve your CV.",
+        ),
     ]
 
     columns = st.columns(4)
@@ -930,7 +1035,7 @@ if st.session_state.page == "Dashboard":
                 f'<div class="feature-description">'
                 f'{description}</div>'
                 '</div>',
-                unsafe_allow_html=True
+                unsafe_allow_html=True,
             )
 
     st.write("")
@@ -943,14 +1048,14 @@ if st.session_state.page == "Dashboard":
             type="primary",
             use_container_width=True,
             on_click=navigate,
-            args=("Resume Analyzer",)
+            args=("Resume Analyzer",),
         )
 
     with right:
         st.button(
             "Try Demo Resume",
             use_container_width=True,
-            on_click=demo_mode
+            on_click=demo_mode,
         )
 
     st.divider()
@@ -968,9 +1073,9 @@ if st.session_state.page == "Dashboard":
         )
 
 
-# =====================================================
+# ============================================================
 # RESUME ANALYZER
-# =====================================================
+# ============================================================
 
 elif st.session_state.page == "Resume Analyzer":
 
@@ -981,7 +1086,7 @@ elif st.session_state.page == "Resume Analyzer":
         'Upload your resume and compare it with '
         'a job description to understand your skills.'
         '</div>',
-        unsafe_allow_html=True
+        unsafe_allow_html=True,
     )
 
     st.subheader("Step 1 — Choose Your Resume")
@@ -990,7 +1095,7 @@ elif st.session_state.page == "Resume Analyzer":
         "Resume source",
         ["Upload resume", "Try demo"],
         key="resume_source",
-        horizontal=True
+        horizontal=True,
     )
 
     uploaded_file = None
@@ -999,7 +1104,7 @@ elif st.session_state.page == "Resume Analyzer":
 
         uploaded_file = st.file_uploader(
             "Upload a PDF or DOCX resume",
-            type=["pdf", "docx"]
+            type=["pdf", "docx"],
         )
 
         if uploaded_file:
@@ -1025,7 +1130,7 @@ elif st.session_state.page == "Resume Analyzer":
         st.selectbox(
             "Choose a job template",
             list(JOB_TEMPLATES),
-            key="template"
+            key="template",
         )
 
     with col2:
@@ -1035,14 +1140,14 @@ elif st.session_state.page == "Resume Analyzer":
         st.button(
             "Use Template",
             on_click=apply_template,
-            use_container_width=True
+            use_container_width=True,
         )
 
     job_description = st.text_area(
         "Job Description",
         key="job_description",
         height=200,
-        placeholder="Paste the job description here..."
+        placeholder="Paste the job description here...",
     )
 
     st.divider()
@@ -1052,7 +1157,7 @@ elif st.session_state.page == "Resume Analyzer":
     if st.button(
         "Analyze My Resume →",
         type="primary",
-        use_container_width=True
+        use_container_width=True,
     ):
 
         if not job_description.strip():
@@ -1095,12 +1200,12 @@ elif st.session_state.page == "Resume Analyzer":
 
                     raw = analyze_resume(
                         resume_text,
-                        job_description
+                        job_description,
                     )
 
                     result = prepare_result(
                         raw,
-                        resume_text
+                        resume_text,
                     )
 
                     role = next(
@@ -1109,7 +1214,7 @@ elif st.session_state.page == "Resume Analyzer":
                             for line in job_description.splitlines()
                             if line.strip()
                         ),
-                        "Custom Job"
+                        "Custom Job",
                     )
 
                     record = {
@@ -1121,7 +1226,7 @@ elif st.session_state.page == "Resume Analyzer":
                         ),
                         "filename": filename,
                         "role": role,
-                        "result": result
+                        "result": result,
                     }
 
                     st.session_state.history.insert(
@@ -1168,7 +1273,7 @@ elif st.session_state.page == "Resume Analyzer":
             st.markdown("#### Potential Skill Gaps")
             show_skills(
                 record["result"]["missing_skills"],
-                missing=True
+                missing=True,
             )
 
         st.write("")
@@ -1177,7 +1282,7 @@ elif st.session_state.page == "Resume Analyzer":
             "Explore Skill Intelligence →",
             on_click=navigate,
             args=("Skill Intelligence",),
-            use_container_width=True
+            use_container_width=True,
         )
 
         st.caption(
@@ -1186,9 +1291,9 @@ elif st.session_state.page == "Resume Analyzer":
         )
 
 
-# =====================================================
+# ============================================================
 # SKILL INTELLIGENCE
-# =====================================================
+# ============================================================
 
 elif st.session_state.page == "Skill Intelligence":
 
@@ -1199,7 +1304,7 @@ elif st.session_state.page == "Skill Intelligence":
         'Understand how your recognized skills '
         'compare with your target role.'
         '</div>',
-        unsafe_allow_html=True
+        unsafe_allow_html=True,
     )
 
     record = current_record()
@@ -1212,7 +1317,7 @@ elif st.session_state.page == "Skill Intelligence":
         st.button(
             "Go to Resume Analyzer",
             on_click=navigate,
-            args=("Resume Analyzer",)
+            args=("Resume Analyzer",),
         )
 
     else:
@@ -1234,7 +1339,7 @@ elif st.session_state.page == "Skill Intelligence":
             st.subheader("Skills to Explore")
             show_skills(
                 result["missing_skills"],
-                missing=True
+                missing=True,
             )
 
         st.info(
@@ -1243,9 +1348,9 @@ elif st.session_state.page == "Skill Intelligence":
         )
 
 
-# =====================================================
+# ============================================================
 # RESUME HEALTH
-# =====================================================
+# ============================================================
 
 elif st.session_state.page == "Resume Health":
 
@@ -1256,7 +1361,7 @@ elif st.session_state.page == "Resume Health":
         'Check whether important resume sections '
         'are recognized.'
         '</div>',
-        unsafe_allow_html=True
+        unsafe_allow_html=True,
     )
 
     record = current_record()
@@ -1273,13 +1378,13 @@ elif st.session_state.page == "Resume Health":
 
         col1.metric(
             "Resume Health",
-            f"{result['health']:.1f}%"
+            f"{result['health']:.1f}%",
         )
 
         col2.metric(
             "Sections Detected",
             f"{sum(result['sections'].values())}"
-            f" / {len(result['sections'])}"
+            f" / {len(result['sections'])}",
         )
 
         st.subheader("Resume Section Overview")
@@ -1307,9 +1412,9 @@ elif st.session_state.page == "Resume Health":
         )
 
 
-# =====================================================
+# ============================================================
 # RECOMMENDATIONS
-# =====================================================
+# ============================================================
 
 elif st.session_state.page == "Recommendations":
 
@@ -1320,7 +1425,7 @@ elif st.session_state.page == "Recommendations":
         'Practical suggestions to help you '
         'improve your resume.'
         '</div>',
-        unsafe_allow_html=True
+        unsafe_allow_html=True,
     )
 
     record = current_record()
@@ -1335,14 +1440,14 @@ elif st.session_state.page == "Recommendations":
 
         for index, recommendation in enumerate(
             record["result"]["recommendations"],
-            start=1
+            start=1,
         ):
 
             with st.container(border=True):
 
                 st.checkbox(
                     recommendation,
-                    key=f"recommendation_{record['id']}_{index}"
+                    key=f"recommendation_{record['id']}_{index}",
                 )
 
         st.divider()
@@ -1366,9 +1471,9 @@ elif st.session_state.page == "Recommendations":
         )
 
 
-# =====================================================
+# ============================================================
 # REPORTS AND HISTORY
-# =====================================================
+# ============================================================
 
 elif st.session_state.page == "Reports & History":
 
@@ -1379,7 +1484,7 @@ elif st.session_state.page == "Reports & History":
         'Review your recent analyses and '
         'download professional PDF reports.'
         '</div>',
-        unsafe_allow_html=True
+        unsafe_allow_html=True,
     )
 
     if not st.session_state.history:
@@ -1420,7 +1525,7 @@ elif st.session_state.page == "Reports & History":
                         key=f"view_{record['id']}",
                         on_click=select_record,
                         args=(record["id"],),
-                        use_container_width=True
+                        use_container_width=True,
                     )
 
                 with col2:
@@ -1432,20 +1537,20 @@ elif st.session_state.page == "Reports & History":
                         ),
                         mime="application/pdf",
                         key=f"pdf_{record['id']}",
-                        use_container_width=True
+                        use_container_width=True,
                     )
 
         st.divider()
 
         st.button(
             "Clear History",
-            on_click=clear_history
+            on_click=clear_history,
         )
 
 
-# =====================================================
+# ============================================================
 # FOOTER
-# =====================================================
+# ============================================================
 
 st.markdown(
     '<div class="footer">'
@@ -1454,7 +1559,7 @@ st.markdown(
     'Built with Python, Streamlit and scikit-learn'
     '</div>'
     '</div>',
-    unsafe_allow_html=True
+    unsafe_allow_html=True,
 )
 
 with st.expander("About ResumeIQ & Privacy"):
